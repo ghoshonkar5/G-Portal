@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const eventsAxios = axios.create({
-  baseURL: '/api/events',
+  baseURL: (import.meta.env.VITE_EVENTS_ORIGIN ?? '') + '/api/events',
 })
 
 eventsAxios.interceptors.request.use((config) => {

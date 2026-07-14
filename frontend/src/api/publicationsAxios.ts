@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const publicationsAxios = axios.create({
-  baseURL: '/api/publications',
+  baseURL: (import.meta.env.VITE_PUBLICATIONS_ORIGIN ?? '') + '/api/publications',
 })
 
 publicationsAxios.interceptors.request.use((config) => {

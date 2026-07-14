@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const authAxios = axios.create({
-  baseURL: '/api/auth',
+  baseURL: (import.meta.env.VITE_AUTH_ORIGIN ?? '') + '/api/auth',
 })
 
 // Attach token to every request automatically
