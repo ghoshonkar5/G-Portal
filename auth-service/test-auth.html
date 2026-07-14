@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head><title>Auth Service Test</title></head>
+<body>
+<h2>Auth Service Test</h2>
+
+<h3>1. Login</h3>
+<input id="fid" placeholder="facultyId" value="1001" />
+<input id="pwd" placeholder="password" type="password" />
+<button onclick="login()">Login</button>
+
+<h3>2. Onboarding (run after login)</h3>
+<input id="photo" type="file" accept="image/*" />
+<button onclick="onboard()">Submit Onboarding</button>
+
+<pre id="out" style="background:#111;color:#0f0;padding:16px;margin-top:16px;white-space:pre-wrap"></pre>
+
+<script>
+let TOKEN = '';
+const log = (x) => document.getElementById('out').textContent = JSON.stringify(x, null, 2);
+
+async function login() {
+    const res = await fetch('http://localhost:5003/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            facultyId: document.getElementById('fid').value,
+            password: document.getElementById('pwd').value
+        })
+    });
+    const data = await res.json();
+    TOKEN = data.token || '';
+    log(data);
+}
+
+async function onboard() {
+    if (!TOKEN) { log({error: 'Login first'}); return; }
+    const file = document.getElementById('photo').files[0];
+    if (!file) { log({error: 'Select a photo first'}); return; }
+
+    const fd = new FormData();
+    fd.append('department', 'Computer Science and Engineering');
+    fd.append('designation', 'Assistant Professor');
+    fd.append('mobile', '9876543210');
+    fd.append('office_room', 'A-101');
+    fd.append('years_of_experience', '5');
+    fd.append('research_area', JSON.stringify(['Machine Learning', 'AI']));
+    fd.append('courses_taught', JSON.stringify(['Data Structures', 'Algorithms']));
+    fd.append('roles', JSON.stringify(['Class Advisor']));
+    fd.append('profile_photo', file);
+
+    try {
+        const res = await fetch('http://localhost:5003/api/profile/onboarding', {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${TOKEN}` },
+            body: fd
+        });
+        const text = await res.text();
+        log({status: res.status, body: text});
+    } catch(e) {
+        log({fetchError: e.message});
+    }
+}
+</script>
+</body>
+</html>

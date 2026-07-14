@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background:            var(--background);
+  --color-foreground:            var(--foreground);
+  --color-card:                  var(--card);
+  --color-card-foreground:       var(--card-foreground);
+  --color-popover:               var(--popover);
+  --color-popover-foreground:    var(--popover-foreground);
+  --color-primary:               var(--primary);
+  --color-primary-foreground:    var(--primary-foreground);
+  --color-secondary:             var(--secondary);
+  --color-secondary-foreground:  var(--secondary-foreground);
+  --color-muted:                 var(--muted);
+  --color-muted-foreground:      var(--muted-foreground);
+  --color-accent:                var(--accent);
+  --color-accent-foreground:     var(--accent-foreground);
+  --color-destructive:           var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border:                var(--border);
+  --color-input:                 var(--input);
+  --color-ring:                  var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  /* Placements module brand tokens */
+  --color-brand-teal: #101A24;
+  --color-brand-cream: #E5DDC6;
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+:root {
+  --background:             oklch(1 0 0);
+  --foreground:             oklch(0.145 0 0);
+  --card:                   oklch(1 0 0);
+  --card-foreground:        oklch(0.145 0 0);
+  --popover:                oklch(1 0 0);
+  --popover-foreground:     oklch(0.145 0 0);
+  --primary:                oklch(0.205 0 0);
+  --primary-foreground:     oklch(0.985 0 0);
+  --secondary:              oklch(0.97 0 0);
+  --secondary-foreground:   oklch(0.205 0 0);
+  --muted:                  oklch(0.97 0 0);
+  --muted-foreground:       oklch(0.556 0 0);
+  --accent:                 oklch(0.97 0 0);
+  --accent-foreground:      oklch(0.205 0 0);
+  --destructive:            oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border:                 oklch(0.922 0 0);
+  --input:                  oklch(0.922 0 0);
+  --ring:                   oklch(0.708 0 0);
+  --radius:                 0.5rem;
+}
+
+/* ── Custom Scrollbar Utilities (Subtle matching #101A24 theme) ── */
+
+/* Hide scrollbar completely */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Sleek, subtle thin scrollbar matching portal theme (#101A24) */
+.scroll-thin::-webkit-scrollbar,
+.subtle-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+.scroll-thin::-webkit-scrollbar-track,
+.subtle-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-thin::-webkit-scrollbar-thumb,
+.subtle-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(16, 26, 36, 0.35);
+  border-radius: 9999px;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover,
+.subtle-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 26, 36, 0.65);
+}
+.scroll-thin,
+.subtle-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 26, 36, 0.35) transparent;
+}
+
+/* Navbar specific subtle white/sapphire scrollbar on #101A24 header */
+.navbar-scrollbar::-webkit-scrollbar {
+  height: 3px;
+}
+.navbar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.navbar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+}
+.navbar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+.navbar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+/* Global default scrollbars across portal for Windows browsers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 26, 36, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 26, 36, 0.5);
+}
