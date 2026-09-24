@@ -1,19 +1,39 @@
 const nodemailer = require('nodemailer');
 
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
-
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
-    }
-});
-
+// ── Resend (production) or Nodemailer (local dev) ─────────
 const sendMail = async (to, subject, html) => {
+    if (process.env.RESEND_API_KEY) {
+        // Production: Resend HTTP API (works on Render free tier)
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: `G-PORTAL <${process.env.RESEND_FROM || 'onboarding@resend.dev'}>`,
+                to: [to],
+                subject,
+                html
+            })
+        });
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(`Email failed: ${err}`);
+        }
+        return;
+    }
+
+    // Local dev fallback: Nodemailer SMTP
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASSWORD
+        }
+    });
     await transporter.sendMail({
         from: `"G-PORTAL" <${process.env.GMAIL_USER}>`,
         to,
