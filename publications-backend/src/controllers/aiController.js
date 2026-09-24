@@ -35,7 +35,7 @@ ${JSON.stringify(summary)}
 
     let response;
     let retries = 3;
-    let model = 'antigravity-preview-latest';
+    let model = 'gemini-2.5-flash';
     let errText = '';
 
     while (retries > 0) {
@@ -60,7 +60,7 @@ ${JSON.stringify(summary)}
         console.log(`[AI] ${model} is overloaded, retrying...`);
         retries--;
         if (retries === 1) {
-          model = 'deep-research-max-preview-04-2026'; // Fallback model for last retry
+          model = 'gemini-2.5-pro'; // Fallback model for last retry
         }
         await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
       } else {
