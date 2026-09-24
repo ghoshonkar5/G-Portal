@@ -43,8 +43,7 @@ const analyzeTrends = async (req, res) => {
       total_publications: publications.length,
       quartile_distribution: quartiles,
       top_cited_authors: topAuthors.map(a => `${a[0]} (${a[1]} citations)`),
-      top_journals: topJournals.map(j => `${j[0]} (${j[1]} papers)`),
-      recent_titles: sortedPubs.slice(0, 50).map(p => p.title) // 50 titles is enough for identifying research areas
+      top_journals: topJournals.map(j => `${j[0]} (${j[1]} papers)`)
     };
 
     const prompt = `
@@ -52,11 +51,11 @@ You are an academic research analyst. Analyze this department's publication data
 
 Return exactly this structure:
 {
-  "dominant_research_areas": ["area1", "area2", "area3"],
+  "dominant_research_areas": ["area1", "area2", "area3"], // Infer based on the top journals
   "most_cited_author": "Name — X total citations",
   "top_journal": "Journal Name — X papers",
   "quartile_distribution": { "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Unranked": 0 },
-  "yoy_trend": "One sentence describing publishing trends based on the titles and distribution",
+  "yoy_trend": "One sentence describing trends based on the distribution",
   "insight": "2-3 sentence executive summary of the department's research output and key patterns"
 }
 
