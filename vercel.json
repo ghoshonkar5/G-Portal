@@ -1,0 +1,160 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && npm install",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/api/placements/:path*",
+      "destination": "https://g-learn-events.onrender.com/api/:path*"
+    },
+    {
+      "source": "/api/achievements/:path*",
+      "destination": "https://g-learn-events.onrender.com/api/achievements/:path*"
+    },
+    {
+      "source": "/api/export/:path*",
+      "destination": "https://g-learn-events.onrender.com/api/export/:path*"
+    },
+    {
+      "source": "/api/events/:path*",
+      "destination": "https://g-learn-events.onrender.com/api/events/:path*"
+    },
+    {
+      "source": "/api/faculty/:path*",
+      "destination": "https://g-learn-events.onrender.com/api/faculty/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://g-learn-events.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/api/auth/me",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/me"
+    },
+    {
+      "source": "/api/auth/login",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/login"
+    },
+    {
+      "source": "/api/auth/register",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/register"
+    },
+    {
+      "source": "/api/auth/verify-otp",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/verify-otp"
+    },
+    {
+      "source": "/api/auth/resend-otp",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/resend-otp"
+    },
+    {
+      "source": "/api/auth/google/:path*",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/google/:path*"
+    },
+    {
+      "source": "/api/auth/google",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/google"
+    },
+    {
+      "source": "/api/auth/forgot-password",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/forgot-password"
+    },
+    {
+      "source": "/api/auth/reset-password",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/reset-password"
+    },
+    {
+      "source": "/api/auth/first-login/:path*",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/first-login/:path*"
+    },
+    {
+      "source": "/api/auth/logout-all",
+      "destination": "https://g-learn-auth.onrender.com/api/auth/logout-all"
+    },
+    {
+      "source": "/api/profile/:path*",
+      "destination": "https://g-learn-auth.onrender.com/api/profile/:path*"
+    },
+    {
+      "source": "/api/admin/users/:path*",
+      "destination": "https://g-learn-auth.onrender.com/api/admin/users/:path*"
+    },
+    {
+      "source": "/api/admin/users",
+      "destination": "https://g-learn-auth.onrender.com/api/admin/users"
+    },
+    {
+      "source": "/api/auth/profile-urls/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/auth/profile-urls/:path*"
+    },
+    {
+      "source": "/api/auth/profile/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/auth/profile/:path*"
+    },
+    {
+      "source": "/api/auth/faculty-list",
+      "destination": "https://g-learn-publications.onrender.com/api/auth/faculty-list"
+    },
+    {
+      "source": "/api/auth/faculty/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/auth/faculty/:path*"
+    },
+    {
+      "source": "/api/auth/admin/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/auth/admin/:path*"
+    },
+    {
+      "source": "/api/publications/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/publications/:path*"
+    },
+    {
+      "source": "/api/conferences/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/conferences/:path*"
+    },
+    {
+      "source": "/api/books/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/books/:path*"
+    },
+    {
+      "source": "/api/scholar/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/scholar/:path*"
+    },
+    {
+      "source": "/api/scopus/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/scopus/:path*"
+    },
+    {
+      "source": "/api/flags/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/flags/:path*"
+    },
+    {
+      "source": "/api/potential-flags/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/potential-flags/:path*"
+    },
+    {
+      "source": "/api/wos/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/wos/:path*"
+    },
+    {
+      "source": "/api/journal-rankings/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/journal-rankings/:path*"
+    },
+    {
+      "source": "/api/krc/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/krc/:path*"
+    },
+    {
+      "source": "/api/admin/ai/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/admin/ai/:path*"
+    },
+    {
+      "source": "/api/admin/stats/:path*",
+      "destination": "https://g-learn-publications.onrender.com/api/admin/stats/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
