@@ -1,20 +1,20 @@
 const nodemailer = require('nodemailer');
 
-// ── Resend (production) or Nodemailer (local dev) ─────────
+// ── Brevo (production) or Nodemailer (local dev) ──────────
 const sendMail = async (to, subject, html) => {
-    if (process.env.RESEND_API_KEY) {
-        // Production: Resend HTTP API (works on Render free tier)
-        const res = await fetch('https://api.resend.com/emails', {
+    if (process.env.BREVO_API_KEY) {
+        // Production: Brevo HTTP API (works on Render free tier)
+        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                'api-key': process.env.BREVO_API_KEY,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                from: `G-PORTAL <${process.env.RESEND_FROM || 'onboarding@resend.dev'}>`,
-                to: [to],
+                sender: { name: 'G-PORTAL', email: process.env.GMAIL_USER || 'ghoshonkar5@gmail.com' },
+                to: [{ email: to }],
                 subject,
-                html
+                htmlContent: html
             })
         });
         if (!res.ok) {
