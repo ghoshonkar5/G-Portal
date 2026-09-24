@@ -35,7 +35,7 @@ ${JSON.stringify(summary)}
 
     let response;
     let retries = 3;
-    let model = 'gemini-2.5-flash';
+    let model = 'gemini-3.6-flash';
     let errText = '';
 
     while (retries > 0) {
@@ -59,12 +59,9 @@ ${JSON.stringify(summary)}
       if (response.status === 503) {
         console.log(`[AI] ${model} is overloaded, retrying...`);
         retries--;
-        if (retries === 1) {
-          model = 'gemini-2.5-pro'; // Fallback model for last retry
-        }
         await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
       } else {
-        break; // break on non-503 errors (e.g. 400, 403)
+        break; // break on non-503 errors (e.g. 400, 403, 404)
       }
     }
 
