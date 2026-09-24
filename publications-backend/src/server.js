@@ -31,8 +31,14 @@ app.use(helmet());
 app.disable('x-powered-by');
 
 // ✅ Middleware FIRST — before any routes
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',').map(s => s.trim());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, cb) => {
+    // Allow requests with no origin (Vercel rewrites, curl, mobile apps)
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    cb(null, false);
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
