@@ -33,22 +33,43 @@ Publication data:
 ${JSON.stringify(summary)}
     `.trim();
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.3 } // Low temp for structured output
-        })
-      }
-    );
+    let response;
+    let retries = 3;
+    let model = 'gemini-3.8-flash';
+    let errText = '';
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('[AI] Gemini API error:', errText);
-      return res.status(502).json({ success: false, message: 'AI service unavailable' });
+    while (retries > 0) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.3 }
+          })
+        }
+      );
+
+      if (response.ok) break;
+      
+      errText = await response.text();
+      console.error(`[AI] Gemini API error on ${model}:`, errText);
+      
+      if (response.status === 503) {
+        console.log(`[AI] ${model} is overloaded, retrying...`);
+        retries--;
+        if (retries === 1) {
+          model = 'gemini-3.7-flash'; // Fallback model for last retry
+        }
+        await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
+      } else {
+        break; // break on non-503 errors (e.g. 400, 403)
+      }
+    }
+
+    if (!response || !response.ok) {
+      return res.status(502).json({ success: false, message: 'AI service unavailable due to high demand. Please try again later.' });
     }
 
     const data = await response.json();
