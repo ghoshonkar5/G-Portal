@@ -22,6 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../components/ui/collapsible";
 import { generateAcademicYears, parseAcademicYear } from "../../utils/academicYears";
 import { api } from "../../api/publicationsApi";
+import ResearchTrendAnalyzer from "../../components/ResearchTrendAnalyzer";
 import type { Publication, Conference, BookChapter } from "../../utils/mockData";
 
 interface AdminDashboardProps {
@@ -1930,6 +1931,9 @@ function PageContent({
           </Card>
         ))}
       </div>
+
+   {/* AI Research Trend Analysis */}
+   <ResearchTrendAnalyzer publications={allPublications} />
 
    <JournalRankingsAdmin />
    <KRCAdmin />

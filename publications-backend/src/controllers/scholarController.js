@@ -3,6 +3,7 @@ const { getAuthorPosition } = require('../utils/authorPosition');
 const pool = require('../config/database');
 const { lookupJournalMetrics } = require('./journalRankingsController');
 const { autoCreateIfIncomplete } = require('./potentialFlagController');
+const { guardedFetch } = require('../utils/ssrfGuard');
 
 // ── Helper: extract Scholar author ID from URL ───────────────────
 const extractScholarUserId = (url) => {
@@ -105,7 +106,7 @@ const scholarUrl = facultyResult.rows[0].google_scholar_url;
 
     const fetchUrl = `https://scholar.google.com/citations?user=${userId}&hl=en&sortby=pubdate&pagesize=100`;
 
-    const response = await fetch(fetchUrl, {
+    const response = await guardedFetch(fetchUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

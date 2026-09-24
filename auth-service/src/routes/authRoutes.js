@@ -6,17 +6,28 @@ const { verifyOtp, resendOtp } = require('../controllers/otpController');
 const { handleGoogle, linkGoogle, unlinkGoogle } = require('../controllers/googleController');
 const { forgotPassword, resetPassword } = require('../controllers/passwordController');
 const { protect, requireAdmin } = require('../middleware/authMiddleware');
+const { validateLogin, validateOTP, validatePasswordReset } = require('../middleware/validateInput');
+
+// A07 — Login rate limiting (10 attempts / 15 min / IP)
+const rateLimit = require('express-rate-limit');
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, message: 'Too many login attempts. Try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // ── Admin Only ────────────────────────────────────────────
 router.post('/register', protect, requireAdmin, register);
-router.post('/login', login);
+router.post('/login', loginLimiter, validateLogin, login);
 
 // First login setup
 router.post('/first-login/check-id', checkFirstLoginId);
-router.post('/first-login/set-password', setFirstLoginPassword);
+router.post('/first-login/set-password', validatePasswordReset, setFirstLoginPassword);
 
 // OTP
-router.post('/verify-otp', verifyOtp);
+router.post('/verify-otp', validateOTP, verifyOtp);
 router.post('/resend-otp', resendOtp);
 
 // Google (login purposes only — link is protected below)

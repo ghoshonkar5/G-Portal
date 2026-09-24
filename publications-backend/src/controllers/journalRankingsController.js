@@ -2,6 +2,7 @@ const pool = require('../config/database');
 
 const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY;
 const SCOPUS_BASE = 'https://api.elsevier.com/content';
+const { guardedFetch } = require('../utils/ssrfGuard');
 
 // ── CSV parsing helpers ───────────────────────────────────────────
 const splitSemicolonLine = (line) => {
@@ -50,7 +51,7 @@ const extractYear = (academicYear, monthYear) => {
 const fetchFromScopusSerialAPI = async (issn) => {
     if (!SCOPUS_API_KEY || !issn) return null;
     try {
-        const res = await fetch(
+        const res = await guardedFetch(
             `${SCOPUS_BASE}/serial/title/issn/${issn}`,
             { headers: { 'X-ELS-APIKey': SCOPUS_API_KEY, 'Accept': 'application/json' } }
         );

@@ -10,6 +10,10 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
+const helmet = require('helmet');
+app.use(helmet());
+app.disable('x-powered-by');
+
 app.use(cors());
 app.use(express.json());
 

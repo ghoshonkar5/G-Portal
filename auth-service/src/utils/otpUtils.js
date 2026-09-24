@@ -1,9 +1,11 @@
 
 const { sendMail, otpEmailTemplate } = require('./emailService');
+const { logSecurityEvent } = require('./securityLogger');
 
 // ── Generate ─────────────────────────────────────────────
 const generateOTP = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    const { randomInt } = require('crypto');
+    return randomInt(100000, 999999).toString();
 };
 
 // ── Store (10 min expiry, reset attempts) ─────────────────
@@ -45,6 +47,7 @@ const verifyOTP = async (userId, submittedOTP, pool) => {
                 'UPDATE users SET otp_attempts = $1, otp_locked_until = $2 WHERE id = $3',
                 [newAttempts, lockUntil, userId]
             );
+            logSecurityEvent('OTP_LOCKED', { userId });
             return { success: false, error: 'Too many wrong attempts. Locked for 15 minutes.' };
         }
         await pool.query(

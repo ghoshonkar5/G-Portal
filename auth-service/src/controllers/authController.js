@@ -4,6 +4,7 @@ const pool = require('../config/database');
 const { generateToken, formatUser } = require('../utils/jwtUtils');
 const { sendOtp } = require('../utils/otpUtils');
 const { sendMail, welcomeEmailTemplate } = require('../utils/emailService');
+const { logSecurityEvent } = require('../utils/securityLogger');
 
 // @desc    Register new faculty user
 // @route   POST /api/auth/register
@@ -91,6 +92,7 @@ exports.login = async (req, res) => {
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
+            logSecurityEvent('LOGIN_FAILED', { facultyId: req.body.facultyId, ip: req.ip });
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
@@ -118,6 +120,7 @@ exports.login = async (req, res) => {
         // Students skip OTP on ID+password login — straight JWT
         if (user.role === 'student') {
             const token = generateToken(user);
+            logSecurityEvent('LOGIN_SUCCESS', { facultyId: req.body.facultyId, ip: req.ip, role: user.role });
             pool.query('INSERT INTO pl_user_sessions (user_id) VALUES ($1)', [user.id]).catch(err => console.warn('pl_user_sessions write failed:', err.message));
             return res.json({ success: true, token, user: formatUser(user) });
         }
@@ -125,6 +128,7 @@ exports.login = async (req, res) => {
         // DEV_MODE — skip OTP, return JWT directly for testing
         if (process.env.DEV_MODE === 'true') {
             const token = generateToken(user);
+            logSecurityEvent('LOGIN_SUCCESS', { facultyId: req.body.facultyId, ip: req.ip, role: user.role, devMode: true });
             pool.query('INSERT INTO pl_user_sessions (user_id) VALUES ($1)', [user.id]).catch(err => console.warn('pl_user_sessions write failed:', err.message));
             return res.json({ success: true, token, user: formatUser(user), devMode: true });
         }
@@ -190,6 +194,8 @@ exports.logoutAll = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
+
+        logSecurityEvent('LOGOUT_ALL', { userId: req.user.id, ip: req.ip });
 
         res.json({
             success: true,

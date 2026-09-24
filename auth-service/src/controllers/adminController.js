@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const pool = require('../config/database');
 const { sendMail, accountCreatedTemplate } = require('../utils/emailService');
+const { logSecurityEvent } = require('../utils/securityLogger');
 
 // @desc    Create single user (faculty or student)
 // @route   POST /api/admin/users
@@ -117,6 +118,7 @@ exports.createUser = async (req, res) => {
         }
 
         // 10. Return response
+        logSecurityEvent('ADMIN_USER_CREATED', { createdBy: req.user.id, newUserId: newUser.id, role: newUser.role });
         res.status(201).json({
             success: true,
             user: newUser

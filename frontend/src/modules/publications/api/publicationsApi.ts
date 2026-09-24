@@ -453,6 +453,16 @@ export const krcAPI = {
   },
 };
 
+// AI Trends Analysis
+export const analyzeResearchTrends = async (publications: any[]) => {
+  const res = await fetch(`${API_BASE_URL}/admin/ai/trends`, {
+    method: 'POST',
+    headers: jsonHeaders(),
+    body: JSON.stringify({ publications })
+  });
+  return handleResponse(res);
+};
+
 // ── Main export ───────────────────────────────────────────────────
 export const api = {
   auth:         authAPI,

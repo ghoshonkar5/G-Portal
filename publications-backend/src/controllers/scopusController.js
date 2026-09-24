@@ -6,6 +6,7 @@ const SCOPUS_API_KEY = process.env.SCOPUS_API_KEY;
 const SCOPUS_BASE = 'https://api.elsevier.com/content';
 const { lookupJournalMetrics } = require('./journalRankingsController');
 const { autoCreateIfIncomplete } = require('./potentialFlagController');
+const { guardedFetch } = require('../utils/ssrfGuard');
 
 // ── Helper: extract Scopus Author ID from URL ────────────────────
 const extractScopusAuthorId = (url) => {
@@ -112,7 +113,7 @@ const fetchAllPubs = async (authorId, maxResults = 500) => {
   let totalResults = Infinity;
 
   while (pubs.length < totalResults && pubs.length < maxResults) {
-    const searchRes = await fetch(
+    const searchRes = await guardedFetch(
 `${SCOPUS_BASE}/search/scopus?query=AU-ID(${authorId})&field=dc:title,prism:publicationName,prism:coverDate,dc:creator,prism:doi,citedby-count,prism:volume,prism:issueIdentifier,prism:pageRange,subtypeDescription,prism:url,prism:issn,prism:eIssn&count=${count}&start=${start}`,
 
 { headers: { 'X-ELS-APIKey': SCOPUS_API_KEY, 'Accept': 'application/json' } }
@@ -147,7 +148,7 @@ const fetchAllPubs = async (authorId, maxResults = 500) => {
 
 // ── Shared: fetch author profile metrics ─────────────────────────
 const fetchAuthorProfile = async (authorId) => {
-  const profileRes = await fetch(
+  const profileRes = await guardedFetch(
     `${SCOPUS_BASE}/author/author_id/${authorId}?field=h-index,citation-count,document-count,affiliation-current`,
     { headers: { 'X-ELS-APIKey': SCOPUS_API_KEY, 'Accept': 'application/json' } }
   );
@@ -179,7 +180,7 @@ console.log('[DEBUG] full API response:', JSON.stringify(profileData, null, 2));
 const fetchYearlyCitationsFromAPI = async (authorId) => {
   try {
     const curYear = new Date().getFullYear();
-    const res = await fetch(
+    const res = await guardedFetch(
       `${SCOPUS_BASE}/author/citation-count?author_id=${authorId}&date=2000-${curYear}`,
       { headers: { 'X-ELS-APIKey': SCOPUS_API_KEY, 'Accept': 'application/json' } }
     );
@@ -1092,7 +1093,7 @@ exports.backfillConferenceCitations = async (req, res) => {
     let updated = 0;
     for (const row of rows) {
       try {
-        const res2 = await fetch(
+        const res2 = await guardedFetch(
           `${SCOPUS_BASE}/search/scopus?query=DOI(${row.doi})&field=citedby-count`,
           { headers: { 'X-ELS-APIKey': SCOPUS_API_KEY, 'Accept': 'application/json' } }
         );

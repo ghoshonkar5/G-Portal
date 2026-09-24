@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const { guardedFetch } = require('../utils/ssrfGuard');
 
 const extractScholarUserId = (url) => {
     if (!url) return null;
@@ -41,7 +42,7 @@ exports.getScholarMetrics = async (req, res) => {
         serpUrl.searchParams.set('api_key', process.env.SERPAPI_KEY);
         serpUrl.searchParams.set('hl', 'en');
 
-        const serpResponse = await fetch(serpUrl.toString());
+        const serpResponse = await guardedFetch(serpUrl.toString());
         const data = await serpResponse.json();
 
         if (!serpResponse.ok)

@@ -10,6 +10,10 @@ const exportRoutes = require('./routes/exportRoutes');
 
 const app = express();
 
+const helmet = require('helmet');
+app.use(helmet());
+app.disable('x-powered-by');
+
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

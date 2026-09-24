@@ -6,6 +6,7 @@ const WOS_API_KEY  = process.env.WOS_API_KEY;
 const WOS_BASE     = 'https://api.clarivate.com/apis/wos-starter/v1';
 const { lookupJournalMetrics } = require('./journalRankingsController');
 const { autoCreateIfIncomplete } = require('./potentialFlagController');
+const { guardedFetch } = require('../utils/ssrfGuard');
 
 
 console.log('[WoS] API Key loaded:', WOS_API_KEY ? `${WOS_API_KEY.substring(0, 6)}...` : 'NOT FOUND');
@@ -129,7 +130,7 @@ const fetchAllPubs = async (researcherId, maxResults = 500) => {
 
     console.log('[WoS] Requesting URL:', url);
 
-    const res = await fetch(url, {
+    const res = await guardedFetch(url, {
       headers: {
         'X-ApiKey': WOS_API_KEY,
         'Accept':   'application/json',
