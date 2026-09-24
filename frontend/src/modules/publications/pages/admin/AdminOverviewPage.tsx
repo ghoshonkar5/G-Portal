@@ -10,6 +10,7 @@ import { AdminCard, StatCard, SectionHeader, Icon, AdminFlagDot, AdminAvatar } f
 import { TimeAreaChart, QuartileDonut, FacultyBars, VBarChart } from './components/charts';
 import { adminStatsAPI, type OverviewCounts, type TopContributor, type QuartileDistItem, type DeptDistItem } from './api/adminStatsApi';
 import { GlobalExportModal } from './components/AdminExportModals';
+import ResearchTrendAnalyzer from '../../components/ResearchTrendAnalyzer';
 import type { TimeSeriesData, FacultyBarData } from './components/charts';
 
 // ── Flags Panel ───────────────────────────────────────────────────
@@ -93,7 +94,7 @@ function FlagsPanel({ flags, onApprove, onDismiss }: {
 
 // ── Overview Page ─────────────────────────────────────────────────
 export function AdminOverviewPage() {
-  const { allFlags, loadAllData, isLoading: dataLoading } = useAdminData();
+  const { allFlags, loadAllData, isLoading: dataLoading, allPublications, allConferences, allBooksChapters } = useAdminData();
 
   // Stat data from new endpoints
   const [counts, setCounts] = useState<OverviewCounts | null>(null);
@@ -205,6 +206,13 @@ export function AdminOverviewPage() {
         <StatCard label="Pending Flags" value={counts?.pendingFlags || 0}
           icon="flag" color="#ef4444" accent="#991b1b" inverted />
       </div>
+      
+      {/* AI Research Trend Analysis */}
+      {allPublications.length > 0 && (
+        <div className="mb-4">
+          <ResearchTrendAnalyzer publications={allPublications} />
+        </div>
+      )}
 
       {/* Charts row */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
